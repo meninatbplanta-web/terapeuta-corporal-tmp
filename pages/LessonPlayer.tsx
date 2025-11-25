@@ -51,7 +51,7 @@ const LessonPlayer: React.FC = () => {
     const targetLesson = LESSONS.find(l => l.id === id);
     if (!targetLesson) return;
 
-    // Allow navigation to locked lessons to "see" them, but lock content.
+    // Allow navigation to locked lessons to '''see''' them, but lock content.
     // Except for minicourse future lessons which are date-locked.
     if (targetLesson.courseId === 'minicourse' && !isLessonAvailable(targetLesson)) {
       setShowLockedModal(formatReleaseDate(targetLesson.releaseDate || ''));
@@ -209,18 +209,10 @@ const LessonPlayer: React.FC = () => {
             </div>
 
             {/* Content Area */}
-            <div className="border-t border-gray-200 dark:border-neutral-900 pt-12 animate-fade-in-up transition-colors">
+            <div className="bg-white dark:bg-brand-black border border-gray-200 dark:border-neutral-900 p-6 md:p-10 rounded-lg shadow-sm transition-colors duration-300">
               {renderVideoSection()}
 
-              {/* Conteúdo da Aula 1 - Inserido do repositório analise-corporal-page */}
-              {currentLessonId === 1 && <CoursePageContent />}
 
-              {/* Lesson Banner and Title */}
-              <div className="mb-8">
-                <h2 className="text-2xl md:text-3xl font-heading font-bold text-gray-900 dark:text-white mb-2 leading-tight">
-                  {currentLesson.title}
-                </h2>
-              </div>
 
               {isContentUnlocked && currentLessonId !== 1 && (
                 <div>
@@ -301,57 +293,52 @@ const LessonPlayer: React.FC = () => {
                   {currentLesson.courseId === 'formation' ? (
                     <button
                       onClick={() => toggleModule(module.id)}
-                      className="w-full text-left p-4 bg-gray-50 dark:bg-neutral-900/20 hover:bg-gray-100 dark:hover:bg-neutral-900/40 flex items-center justify-between transition-colors"
+                      className="w-full flex justify-between items-center p-6 text-left hover:bg-gray-50 dark:hover:bg-neutral-900/50 transition-colors duration-200"
                     >
                       <div>
-                        <span className="text-[10px] font-bold text-brand-red uppercase tracking-widest mb-1 block">
-                          Módulo {module.id}
-                        </span>
-                        <h3 className="font-bold text-sm text-gray-800 dark:text-neutral-300 line-clamp-1 pr-2">{module.title}</h3>
+                        <p className="text-xs font-mono text-gray-400 dark:text-neutral-600 mb-1">Módulo {module.id}</p>
+                        <h3 className="font-heading font-bold text-gray-900 dark:text-white">{module.title}</h3>
                       </div>
-                      {isExpanded ? <ChevronUp size={16} className="text-gray-500 dark:text-neutral-500" /> : <ChevronDown size={16} className="text-gray-500 dark:text-neutral-500" />}
+                      <ChevronDown
+                        className={`transform transition-transform duration-300 ${isExpanded ? 'rotate-180' : ''}`}
+                        size={20}
+                      />
                     </button>
-                  ) : null}
+                  ) : (
+                    <div className="p-6">
+                      <h3 className="font-heading font-bold text-gray-900 dark:text-white">{module.title}</h3>
+                    </div>
+                  )}
 
-                  {/* Lessons List - Show if expanded or if it's the minicourse (which has no foldable modules visually) */}
-                  {(isExpanded || currentLesson.courseId === 'minicourse') && (
-                    <div className="flex flex-col">
-                      {module.lessons.map((lesson, index) => {
+                  {/* Lessons List */}
+                  {isExpanded && (
+                    <div className="bg-gray-50/50 dark:bg-black/20 transition-all duration-500 ease-in-out overflow-hidden">
+                      {module.lessons.map((lesson) => {
                         const isActive = lesson.id === currentLessonId;
-                        // Logic for sidebar lock icon
-                        // Minicourse: Lock if date not passed
-                        // Formation: Lock all (visual only, allows click)
-                        const showLockIcon = lesson.courseId === 'minicourse'
-                          ? !isLessonAvailable(lesson)
-                          : true;
+                        const isLocked = !isLessonAvailable(lesson);
 
                         return (
-                          <button
+                          <div
                             key={lesson.id}
                             onClick={() => handleLessonChange(lesson.id)}
-                            className={`text-left p-4 pl-6 border-l-4 transition-all flex items-start gap-3 group
-                                ${isActive
-                                ? 'bg-gray-100 dark:bg-neutral-900 border-brand-red'
-                                : 'border-transparent hover:bg-gray-50 dark:hover:bg-neutral-900/30'}
-                              `}
+                            className={`flex items-center gap-4 p-4 pl-8 border-l-4 transition-colors duration-200 cursor-pointer 
+                                          ${isActive
+                                ? 'border-brand-red bg-red-50 dark:bg-red-900/10'
+                                : isLocked
+                                  ? 'border-transparent text-gray-400 dark:text-neutral-700'
+                                  : 'border-transparent hover:bg-gray-100 dark:hover:bg-neutral-900/70'
+                              }`}
                           >
-                            <div className={`mt-0.5 ${isActive ? 'text-brand-red' : 'text-gray-400 dark:text-neutral-600'}`}>
-                              {!showLockIcon ? <Play size={14} fill={isActive ? "currentColor" : "none"} /> : <Lock size={14} />}
+                            <div className={`flex-shrink-0 ${isActive ? 'text-brand-red' : 'text-gray-400 dark:text-neutral-600'}`}>
+                              {isActive ? <Play size={16} fill="currentColor" /> : (isLocked ? <Lock size={16} /> : <Play size={16} />)}
                             </div>
-                            <div className="w-full">
-                              {currentLesson.courseId === 'formation' && (
-                                <span className={`text-[10px] font-bold uppercase tracking-wide block mb-0.5 transition-colors ${isActive ? 'text-brand-red/80' : 'text-gray-500 dark:text-neutral-500 group-hover:text-brand-red/70'}`}>
-                                  Aula {index + 1}
-                                </span>
-                              )}
-                              <h4 className={`font-medium text-xs leading-relaxed mb-1 ${isActive ? 'text-gray-900 dark:text-white' : 'text-gray-600 dark:text-neutral-400 group-hover:text-gray-900 dark:group-hover:text-neutral-200'}`}>
+                            <div className="flex-1">
+                              <h4 className={`font-semibold text-sm leading-tight ${isActive ? 'text-gray-900 dark:text-white' : (isLocked ? '' : 'text-gray-700 dark:text-neutral-300')}`}>
                                 {lesson.title}
                               </h4>
-                              {lesson.duration && (
-                                <span className="text-[10px] text-gray-500 dark:text-neutral-600 font-mono block">{lesson.duration}</span>
-                              )}
                             </div>
-                          </button>
+                            <span className="text-xs font-mono text-gray-400 dark:text-neutral-600">{lesson.duration || '60:00'}</span>
+                          </div>
                         );
                       })}
                     </div>
@@ -363,39 +350,11 @@ const LessonPlayer: React.FC = () => {
         </aside>
 
         {/* Main Content */}
-        <main className="flex-1 overflow-y-auto custom-scrollbar bg-gray-50 dark:bg-brand-darker transition-colors">
-          <div className="p-6 lg:p-12 pb-24">
-
-            {/* Course Banner (Moved) */}
-            {currentCourse && (
-              <div className="mb-8">
-                <img
-                  src="https://priscilla-moreira.com/imagens/minicurso-banner1.jpg"
-                  alt="Banner do Curso"
-                  className="w-full h-auto rounded-lg mb-6 object-cover shadow-sm border border-gray-200 dark:border-neutral-800"
-                />
-                <div className="flex items-center gap-3 mb-2">
-                  <div className={`w-2 h-2 rounded-full ${currentCourse.id === 'minicourse' ? 'bg-green-500' : 'bg-brand-red'}`}></div>
-                  <span className="text-xs font-bold text-gray-500 dark:text-neutral-400 uppercase tracking-widest">
-                    {currentCourse.id === 'minicourse' ? 'Minicurso Gratuito' : 'Formação Completa'}
-                  </span>
-                </div>
-                <h1 className="text-2xl md:text-3xl font-heading font-bold text-gray-900 dark:text-white">
-                  {currentCourse.title}
-                </h1>
-              </div>
-            )}
-
-            {/* Video Player Area */}
-            {renderVideoSection()}
-
-              {/* Conteúdo da Aula 1 - Inserido do repositório analise-corporal-page */}
-              {currentLessonId === 1 && <CoursePageContent />}
-
-            {/* Lesson Info Header (Below Video) */}
-            <div className="mb-8">
+        <main className="flex-1 flex flex-col overflow-hidden">
+          <div className="p-6 border-b border-gray-200 dark:border-neutral-900 flex justify-between items-center shrink-0">
+            <div>
               {currentLesson.courseId === 'formation' && (
-                <span className="text-xs font-bold text-brand-red uppercase tracking-wider mb-2 block">
+                <span className="text-xs font-mono text-gray-400 dark:text-neutral-600 mb-1 block">
                   Módulo {currentLesson.moduleId} • Aula {currentLesson.id - 100}
                   {/* Note: ID math is a rough display approximation, real app would use array index */}
                 </span>
@@ -403,80 +362,30 @@ const LessonPlayer: React.FC = () => {
               <h2 className="text-2xl font-heading font-bold text-gray-900 dark:text-white mb-2">{currentLesson.title}</h2>
             </div>
 
-            {/* Tabs Navigation */}
-            <div className="mb-8 border-b border-gray-200 dark:border-neutral-800 overflow-x-auto scrollbar-hide">
-              <div className="flex gap-8 min-w-max pb-1">
-                {Object.values(TabOption).map((tab) => (
-                  <button
-                    key={tab}
-                    onClick={() => setActiveTab(tab)}
-                    className={`pb-4 text-sm font-bold uppercase tracking-wide transition-colors relative 
-                        ${activeTab === tab ? 'text-brand-red' : 'text-gray-500 dark:text-neutral-500 hover:text-gray-900 dark:hover:text-white'}
-                    `}
-                  >
-                    {tab}
-                    {activeTab === tab && (
-                      <span className="absolute bottom-0 left-0 w-full h-0.5 bg-brand-red rounded-t-full"></span>
-                    )}
-                  </button>
-                ))}
-              </div>
+            {/* Navigation Buttons */}
+            <div className="flex gap-2">
+              <button
+                onClick={() => prevLesson && handleLessonChange(prevLesson.id)}
+                disabled={!prevLesson}
+                className="p-3 rounded-full bg-gray-100 dark:bg-neutral-900 hover:bg-gray-200 dark:hover:bg-neutral-800 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              >
+                <ChevronLeft size={20} />
+              </button>
+              <button
+                onClick={() => nextLesson && handleLessonChange(nextLesson.id)}
+                disabled={!nextLesson}
+                className="p-3 rounded-full bg-gray-100 dark:bg-neutral-900 hover:bg-gray-200 dark:hover:bg-neutral-800 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              >
+                <ChevronRight size={20} />
+              </button>
             </div>
+          </div>
 
-            {/* Tabs Content */}
-            <div className="mb-12">
-              {renderTabContent()}
-            </div>
-
-            {/* Bottom Navigation */}
-            <div className="flex items-center justify-between pt-8 border-t border-gray-200 dark:border-neutral-900 transition-colors">
-              {prevLesson ? (
-                <button
-                  onClick={() => handleLessonChange(prevLesson.id)}
-                  className="flex items-center gap-2 px-6 py-3 rounded border border-gray-300 dark:border-neutral-700 text-gray-700 dark:text-white hover:bg-gray-100 dark:hover:bg-neutral-900 transition-colors"
-                >
-                  <ChevronLeft size={20} />
-                  <span className="font-bold uppercase text-sm tracking-wider">Aula Anterior</span>
-                </button>
-              ) : <div></div>}
-
-              {nextLesson && (
-                <button
-                  onClick={() => handleLessonChange(nextLesson.id)}
-                  className="flex items-center gap-2 px-6 py-3 rounded bg-gray-900 dark:bg-neutral-900 border border-gray-800 dark:border-neutral-800 text-white dark:text-neutral-300 hover:text-brand-red dark:hover:text-white hover:border-brand-red transition-colors font-bold uppercase text-sm tracking-wider"
-                >
-                  <span className="hidden sm:inline">Próxima Aula</span>
-                  <span className="sm:hidden">Próxima</span>
-                  <ChevronRight size={20} />
-                </button>
-              )}
-            </div>
-
+          <div className="flex-1 overflow-y-auto custom-scrollbar p-8">
+            {renderTabContent()}
           </div>
         </main>
       </div>
-
-      {/* Locked Modal */}
-      {showLockedModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 animate-fade-in">
-          <div className="bg-white dark:bg-brand-black border border-gray-200 dark:border-neutral-800 p-8 rounded-lg shadow-2xl max-w-md w-full text-center transition-colors">
-            <Lock className="mx-auto text-gray-400 dark:text-neutral-600 mb-4" size={40} />
-            <h3 className="text-xl font-heading font-bold text-gray-900 dark:text-white mb-2">Conteúdo Bloqueado</h3>
-            <p className="text-gray-500 dark:text-neutral-400 mb-6">
-              Esta aula será liberada em <br />
-              <span className="text-brand-red font-bold text-lg">{showLockedModal}</span>
-            </p>
-            <button
-              onClick={() => setShowLockedModal(null)}
-              className="bg-gray-100 dark:bg-white text-gray-900 dark:text-black hover:bg-gray-200 dark:hover:bg-neutral-200 font-bold py-3 px-8 rounded uppercase tracking-wide transition-colors"
-            >
-              Entendido
-            </button>
-          </div>
-        </div>
-      )}
-      
-
     </div>
   );
 };
