@@ -212,6 +212,9 @@ const LessonPlayer: React.FC = () => {
             <div className="bg-white dark:bg-brand-black border border-gray-200 dark:border-neutral-900 p-6 md:p-10 rounded-lg shadow-sm transition-colors duration-300">
               {renderVideoSection()}
 
+              {/* Conteúdo da Aula 1 - Inserido do repositório analise-corporal-page */}
+              {currentLessonId === 1 && <CoursePageContent />}
+
 
 
               {isContentUnlocked && currentLessonId !== 1 && (
