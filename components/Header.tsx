@@ -41,7 +41,7 @@ const Header: React.FC<HeaderProps> = ({ showBackLink = true }) => {
           >
             <ArrowLeft size={16} />
             Voltar ao início
-          </div>
+          </Link>
         )}
       </div>
     </header>
