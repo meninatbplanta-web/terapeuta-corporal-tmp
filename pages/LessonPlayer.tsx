@@ -279,7 +279,7 @@ const LessonPlayer: React.FC = () => {
         <img
           src="https://priscilla-moreira.com/imagens/banner-1.jpg"
           alt="Banner Promocional"
-          className="w-full h-auto object-cover max-h-40"
+          className="w-full h-auto object-cover"
         />
       </div>
 
