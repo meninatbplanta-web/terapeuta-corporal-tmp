@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Play, Lock } from 'lucide-react';\nimport { Link } from 'react-router-dom';
+import { Play, Lock } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import Header from '../components/Header';
 import LoginModal from '../components/LoginModal';
 import { COURSES } from '../data/lessons';
