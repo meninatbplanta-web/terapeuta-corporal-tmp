@@ -157,7 +157,7 @@ const LessonPlayer: React.FC = () => {
   // --- MINICURSO LAYOUT ---
   if (currentLesson.courseId === 'minicourse') {
     return (
-	      <div className="bg-gray-50 dark:bg-brand-darker text-gray-900 dark:text-white flex flex-col min-h-screen transition-colors duration-300">
+      <div className="bg-gray-50 dark:bg-brand-darker text-gray-900 dark:text-white flex flex-col min-h-screen transition-colors duration-300">
         <Header />
         <div className="flex-1 overflow-y-auto custom-scrollbar">
           <main className="container mx-auto px-4 py-12 max-w-4xl">
@@ -184,7 +184,7 @@ const LessonPlayer: React.FC = () => {
             <div className="mb-16">
               <h3 className="text-xs font-bold text-gray-500 dark:text-neutral-500 uppercase tracking-widest mb-6">CONTEÚDO DO MINICURSO</h3>
               <div className="flex flex-col gap-6">
-                {courseModules[0]?.lessons.map((lesson) => {
+                {courseModules[0]?.lessons.map((lesson, index) => {
                   const isActive = lesson.id === currentLessonId;
                   const isLocked = !isLessonAvailable(lesson);
                   return (
@@ -197,6 +197,9 @@ const LessonPlayer: React.FC = () => {
                         {isActive ? <Play size={24} fill="currentColor" /> : (isLocked ? <Lock size={20} /> : <Play size={20} />)}
                       </div>
                       <div>
+                        <span className="text-xs font-bold text-gray-400 dark:text-neutral-500 uppercase tracking-wider mb-1 block">
+                          Aula {index + 1}
+                        </span>
                         <h4 className={`font-heading font-bold text-lg md:text-xl leading-tight mb-1 transition-colors ${isActive ? 'text-gray-900 dark:text-white' : 'text-gray-600 dark:text-neutral-300 group-hover:text-gray-900 dark:group-hover:text-white'}`}>
                           {lesson.title}
                         </h4>
@@ -227,9 +230,9 @@ const LessonPlayer: React.FC = () => {
                           key={tab}
                           onClick={() => setActiveTab(tab)}
                           className={`px-6 py-2 rounded-full font-medium text-sm transition-all duration-200 
-                                        ${activeTab === tab 
-                                          ? 'bg-brand-red text-white shadow-md transform scale-105' 
-                                          : 'bg-white dark:bg-neutral-900 text-gray-600 dark:text-neutral-400 border border-gray-200 dark:border-neutral-800 hover:bg-gray-50 dark:hover:bg-neutral-800 hover:border-gray-300 dark:hover:border-neutral-700'}
+                                        ${activeTab === tab
+                              ? 'bg-brand-red text-white shadow-md transform scale-105'
+                              : 'bg-white dark:bg-neutral-900 text-gray-600 dark:text-neutral-400 border border-gray-200 dark:border-neutral-800 hover:bg-gray-50 dark:hover:bg-neutral-800 hover:border-gray-300 dark:hover:border-neutral-700'}
                                     `}
                         >
                           {tab}

@@ -388,49 +388,63 @@ const CoursePageContent: React.FC = () => {
               {[
                 { id: "exercicio1", title: "Exercício 1: O Peso das Emoções", duration: "1 minuto", steps: ["Fique em pé e estenda os dois braços à sua frente.", "Feche os olhos.", "Imagine que em um dos braços você segura uma mochila muito pesada, cheia de pedras.", "No outro braço, imagine que você segura um balão leve e colorido.", "Permaneça nesta posição por 1 minuto, sentindo o peso e a leveza.", "Abra os olhos e abaixe os braços lentamente."], message: "As emoções têm peso real no corpo. Responsabilidades e culpas pesam fisicamente sobre nós." },
                 { id: "exercicio2", title: "Exercício 2: O Espelho das Expressões", duration: "1 minuto", steps: ["Fique em frente a um espelho.", "Coloque no rosto uma expressão de raiva intensa. Franza a testa, endureça a mandíbula.", "Mantenha essa expressão por 30 segundos e perceba o que acontece com o resto do seu corpo.", "Agora, relaxe o rosto e sorria genuinamente.", "Mantenha esse sorriso por 30 segundos e observe as mudanças em seu corpo."], message: "Emoções moldam não só o rosto, mas todo o corpo. Uma expressão facial ativa uma cadeia de reações físicas correspondentes." },
-              ].map((exercise) => (
-                <Card key={exercise.id} className="border-2 border-slate-200 dark:border-neutral-800">
-                  <CardHeader className="pb-3">
-                    <div className="flex items-start justify-between">
-                      <div>
-                        <CardTitle className="text-lg text-slate-900 dark:text-white">{exercise.title}</CardTitle>
-                        <Badge variant="secondary" className="mt-2">⏱️ {exercise.duration}</Badge>
+              ].map((exercise) => {
+                const isEx1 = exercise.id === "exercicio1";
+                const cardStyle = isEx1
+                  ? "bg-blue-50/50 dark:bg-blue-900/10 border-blue-200 dark:border-blue-800"
+                  : "bg-purple-50/50 dark:bg-purple-900/10 border-purple-200 dark:border-purple-800";
+
+                return (
+                  <Card key={exercise.id} className={`border-2 ${cardStyle}`}>
+                    <CardHeader className="pb-3">
+                      <div className="flex items-start justify-between">
+                        <div>
+                          <CardTitle className="text-lg text-slate-900 dark:text-white">{exercise.title}</CardTitle>
+                          <Badge variant="secondary" className="mt-2">⏱️ {exercise.duration}</Badge>
+                        </div>
+                        <Button variant="ghost" size="sm" onClick={() => setExpandedExercise(expandedExercise === exercise.id ? null : exercise.id)}>
+                          {expandedExercise === exercise.id ? "−" : "+"}
+                        </Button>
                       </div>
-                      <Button variant="ghost" size="sm" onClick={() => setExpandedExercise(expandedExercise === exercise.id ? null : exercise.id)}>
-                        {expandedExercise === exercise.id ? "−" : "+"}
-                      </Button>
-                    </div>
-                  </CardHeader>
-                  {expandedExercise === exercise.id && (
-                    <CardContent className="space-y-4">
-                      <div>
-                        <h4 className="font-semibold text-slate-900 dark:text-white mb-3">Instruções:</h4>
-                        <ol className="space-y-2">
-                          {exercise.steps.map((step, idx) => (
-                            <li key={idx} className="flex gap-3 text-slate-700 dark:text-slate-300">
-                              <span className="font-semibold text-cyan-600 flex-shrink-0">{idx + 1}.</span>
-                              <span>{step}</span>
-                            </li>
-                          ))}
-                        </ol>
-                      </div>
-                      <div className="bg-cyan-50 dark:bg-cyan-950/50 border-l-4 border-cyan-500 p-4 rounded">
-                        <p className="text-sm text-cyan-900 dark:text-cyan-200">
-                          <span className="font-semibold">Mensagem Central:</span> {exercise.message}
-                        </p>
-                      </div>
-                      <div className="bg-blue-50 dark:bg-blue-950/50 border-l-4 border-blue-500 p-4 rounded">
-                        <p className="text-sm text-blue-900 dark:text-blue-200 font-semibold mb-2">Diário de Bordo:</p>
-                        <textarea placeholder="Anote aqui suas observações e sensações durante o exercício..." className="w-full p-3 border border-blue-200 dark:border-blue-800 rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-neutral-800 dark:text-white" rows={3} />
-                      </div>
-                      <Button className={`w-full transition-all duration-300 ${completedSections[exercise.id] ? "bg-green-600 hover:bg-green-700 text-white" : "bg-slate-900 hover:bg-slate-800 text-white shadow-md"}`} onClick={() => toggleSection(exercise.id)}>
-                        {completedSections[exercise.id] ? (<><CheckCircle2 className="w-4 h-4 mr-2" />Exercício Completo</>) : ("Marcar exercício como completo")}
-                      </Button>
-                      <GamificationStatus />
-                    </CardContent>
-                  )}
-                </Card>
-              ))}
+                    </CardHeader>
+                    {expandedExercise === exercise.id && (
+                      <CardContent className="space-y-4">
+                        <div>
+                          <h4 className="font-semibold text-slate-900 dark:text-white mb-3">Instruções:</h4>
+                          <ol className="space-y-2">
+                            {exercise.steps.map((step, idx) => (
+                              <li key={idx} className="flex gap-3 text-slate-700 dark:text-slate-300">
+                                <span className={`font-semibold flex-shrink-0 ${isEx1 ? "text-blue-600" : "text-purple-600"}`}>{idx + 1}.</span>
+                                <span>{step}</span>
+                              </li>
+                            ))}
+                          </ol>
+                        </div>
+                        <div className={`border-l-4 p-4 rounded ${isEx1 ? "bg-blue-100/50 dark:bg-blue-950/30 border-blue-500" : "bg-purple-100/50 dark:bg-purple-950/30 border-purple-500"}`}>
+                          <p className={`text-sm ${isEx1 ? "text-blue-900 dark:text-blue-200" : "text-purple-900 dark:text-purple-200"}`}>
+                            <span className="font-semibold">Mensagem Central:</span> {exercise.message}
+                          </p>
+                        </div>
+                        <div className={`border-l-4 p-4 rounded ${isEx1 ? "bg-blue-50 dark:bg-blue-950/50 border-blue-400" : "bg-purple-50 dark:bg-purple-950/50 border-purple-400"}`}>
+                          <p className={`text-sm font-semibold mb-2 ${isEx1 ? "text-blue-900 dark:text-blue-200" : "text-purple-900 dark:text-purple-200"}`}>Diário de Bordo:</p>
+                          <textarea
+                            placeholder="Anote aqui suas observações e sensações durante o exercício..."
+                            className={`w-full p-3 border rounded text-sm focus:outline-none focus:ring-2 dark:bg-neutral-800 dark:text-white ${isEx1
+                                ? "border-blue-200 dark:border-blue-800 focus:ring-blue-500"
+                                : "border-purple-200 dark:border-purple-800 focus:ring-purple-500"
+                              }`}
+                            rows={3}
+                          />
+                        </div>
+                        <Button className={`w-full transition-all duration-300 ${completedSections[exercise.id] ? "bg-green-600 hover:bg-green-700 text-white" : "bg-slate-900 hover:bg-slate-800 text-white shadow-md"}`} onClick={() => toggleSection(exercise.id)}>
+                          {completedSections[exercise.id] ? (<><CheckCircle2 className="w-4 h-4 mr-2" />Exercício Completo</>) : ("Marcar exercício como completo")}
+                        </Button>
+                        <GamificationStatus />
+                      </CardContent>
+                    )}
+                  </Card>
+                );
+              })}
             </div>
           </CardContent>
         </Card>
