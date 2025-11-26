@@ -274,6 +274,15 @@ const LessonPlayer: React.FC = () => {
     <div className="h-screen bg-gray-50 dark:bg-brand-darker text-gray-900 dark:text-white flex flex-col overflow-hidden transition-colors duration-300">
       <Header />
 
+      {/* Banner Inserido */}
+      <div className="w-full bg-black">
+        <img
+          src="https://priscilla-moreira.com/imagens/banner-1.jpg"
+          alt="Banner Promocional"
+          className="w-full h-auto object-cover max-h-40"
+        />
+      </div>
+
 
 
      <div className="flex-1 flex flex-col lg:flex-row max-w-[1600px] mx-auto w-full overflow-hidden">
