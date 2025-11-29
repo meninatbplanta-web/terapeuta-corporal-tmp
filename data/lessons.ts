@@ -620,7 +620,7 @@ export const COURSES: Course[] = [
 // Content mapping
 export const LESSON_CONTENT: Record<number, Partial<Record<TabOption, string>>> = {
   1: {
-    [TabOption.COURSE]: `<iframe src="/aula1-minicurso.html" style="width: 100%; height: 100vh; border: none; border-radius: 12px; overflow: hidden;" title="Aula 1 - Fundamentos da Análise Corporal"></iframe>
+    [TabOption.COURSE]: `<iframe src="/aula1-minicurso.html" style="width: 100%; height: 100vh; border: none; border-radius: 12px; overflow: hidden;" title="Atitle: "O Raio-X Invisível (A Chave Mestra)",</iframe>
     `,
     [TabOption.VIDEO_SUMMARY]: `
       <p class="mb-4">Um resumo dinâmico de 5 minutos cobrindo os pontos chaves da Aula 1.</p>
